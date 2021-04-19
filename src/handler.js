@@ -77,4 +77,29 @@ const getAllBooksHandler = () => ({
   },
 });
 
-module.exports = { createBookHandler, getAllBooksHandler };
+const getBookHandler = (req, h) => {
+  const data = req.params;
+
+  const index = books.findIndex((book) => book.id === data.id);
+  const detail = books[index];
+
+  if (index !== -1) {
+    const response = h.response({
+      status: 'success',
+      data: {
+        detail,
+      },
+    });
+    response.code(404);
+    return response;
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Buku tidak ditemukan',
+  });
+  response.code(404);
+  return response;
+};
+
+module.exports = { createBookHandler, getAllBooksHandler, getBookHandler };
