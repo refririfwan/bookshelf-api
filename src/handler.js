@@ -70,4 +70,11 @@ const createBookHandler = (req, h) => {
   return response;
 };
 
-module.exports = { createBookHandler };
+const getAllBooksHandler = () => ({
+  status: 'success',
+  data: {
+    books,
+  },
+});
+
+module.exports = { createBookHandler, getAllBooksHandler };
