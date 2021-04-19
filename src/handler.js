@@ -132,7 +132,7 @@ const editBookByIdHandler = (req, h) => {
   if (index === -1) {
     const response = h.response({
       status: 'fail',
-      message: 'Gagal memperbarui catatan. Id tidak ditemukan',
+      message: 'Gagal memperbarui Buku. Id tidak ditemukan',
     });
     response.code(404);
     return response;
@@ -154,7 +154,7 @@ const editBookByIdHandler = (req, h) => {
 
     const response = h.response({
       status: 'success',
-      message: 'Catatan berhasil diperbarui',
+      message: 'Buku berhasil diperbarui',
     });
     response.code(200);
     return response;
@@ -162,9 +162,32 @@ const editBookByIdHandler = (req, h) => {
 
   const response = h.response({
     status: 'fail',
-    message: 'Catatan gagal ditambahkan',
+    message: 'Buku gagal ditambahkan',
   });
   response.code(500);
+  return response;
+};
+
+const deleteBookByIdHandler = (req, h) => {
+  const data = req.params;
+
+  const index = books.findIndex((book) => book.id === data.id);
+
+  if (index !== -1) {
+    books.splice(index, 1);
+    const response = h.response({
+      status: 'success',
+      message: 'Buku berhasil dihapus',
+    });
+    response.code(200);
+    return response;
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Buku gagal dihapus. Id tidak ditemukan',
+  });
+  response.code(404);
   return response;
 };
 
@@ -173,4 +196,5 @@ module.exports = {
   getAllBooksHandler,
   getBookHandler,
   editBookByIdHandler,
+  deleteBookByIdHandler,
 };
