@@ -64,7 +64,7 @@ const createBookHandler = (req, h) => {
 
   const response = h.response({
     status: 'fail',
-    message: 'Catatan gagal ditambahkan',
+    message: 'Buku gagal ditambahkan',
   });
   response.code(500);
   return response;
@@ -191,10 +191,65 @@ const deleteBookByIdHandler = (req, h) => {
   return response;
 };
 
+const getQueryParametersHandler = (req, h) => {
+  const { name, reading, finished } = req.query;
+
+  if (name !== undefined) {
+    const data = books.filter((book) => book.name.toLowerCase()
+      .includes(name.toLowerCase())
+      .map((b) => ({
+        bookId: b.id,
+        name: b.name,
+      })));
+    const response = h.response({
+      status: 'success',
+      data: { data },
+    });
+    response.code(200);
+    return response;
+  }
+
+  if (reading === '1') {
+    const data = books.filter((book) => book.reading === true)
+      .map((b) => ({
+        id: b.id,
+        name: b.name,
+      }));
+    const response = h.response({
+      status: 'success',
+      data: { data },
+    });
+    response.code(200);
+    return response;
+  }
+
+  if (finished === '1') {
+    const data = books.filter((book) => book.finished === true)
+      .map((b) => ({
+        id: b.id,
+        name: b.name,
+      }));
+    const response = h.response({
+      status: 'success',
+      data: { data },
+    });
+    response.code(200);
+    return response;
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Buku tidak ditemukan',
+  });
+  response.code(500);
+  return response;
+};
+
 module.exports = {
   createBookHandler,
   getAllBooksHandler,
   getBookHandler,
   editBookByIdHandler,
   deleteBookByIdHandler,
+  getQueryParametersHandler,
 };
