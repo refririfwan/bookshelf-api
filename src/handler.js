@@ -70,12 +70,61 @@ const createBookHandler = (req, h) => {
   return response;
 };
 
-const getAllBooksHandler = () => ({
-  status: 'success',
-  data: {
-    books,
-  },
-});
+const getAllBooksHandler = (req, h) => {
+  const { name, reading, finished } = req.query;
+
+  if (name !== undefined) {
+    const data = books.filter((book) => book.name.toLowerCase()
+      .includes(name.toLowerCase())
+      .map((b) => ({
+        bookId: b.id,
+        name: b.name,
+      })));
+    const response = h.response({
+      status: 'success',
+      data: { data },
+    });
+    response.code(200);
+    return response;
+  }
+
+  if (reading === '1') {
+    const data = books.filter((book) => book.reading === true)
+      .map((b) => ({
+        id: b.id,
+        name: b.name,
+      }));
+    const response = h.response({
+      status: 'success',
+      data: { data },
+    });
+    response.code(200);
+    return response;
+  }
+
+  if (finished === '1') {
+    const data = books.filter((book) => book.finished === true)
+      .map((b) => ({
+        id: b.id,
+        name: b.name,
+      }));
+    const response = h.response({
+      status: 'success',
+      data: { data },
+    });
+    response.code(200);
+    return response;
+  }
+
+  const response = h.response({
+    status: 'success',
+    data: {
+      books,
+    },
+  });
+  response.code(200);
+  return response;
+};
 
 const getBookHandler = (req, h) => {
   const data = req.params;
