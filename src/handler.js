@@ -2,35 +2,11 @@ const { nanoid } = require('nanoid');
 const books = require('./books');
 
 const createBookHandler = (req, h) => {
-  const data = JSON.parse(req.payload);
+  const data = req.payload;
 
   const {
     name, year, author, summary, publisher, pageCount, readPage, reading,
   } = data;
-
-  const id = nanoid(16);
-  const finished = false;
-  const createdAt = new Date().toISOString();
-  const updatedAt = createdAt;
-
-  const newBook = {
-    name,
-    year,
-    author,
-    summary,
-    publisher,
-    pageCount,
-    readPage,
-    reading,
-    id,
-    finished,
-    createdAt,
-    updatedAt,
-  };
-
-  books.push(newBook);
-
-  const isSuccess = books.filter((book) => book.id === id).length > 0;
 
   if (!name) {
     const response = h.response({
@@ -49,6 +25,30 @@ const createBookHandler = (req, h) => {
     response.code(400);
     return response;
   }
+
+  const id = nanoid(16);
+  const finished = false;
+  const insertedAt = new Date().toISOString();
+  const updatedAt = insertedAt;
+
+  const isSuccess = books.filter((book) => book.id === id).length > 0;
+
+  const newBook = {
+    name,
+    year,
+    author,
+    summary,
+    publisher,
+    pageCount,
+    readPage,
+    reading,
+    id,
+    finished,
+    insertedAt,
+    updatedAt,
+  };
+
+  books.push(newBook);
 
   if (isSuccess) {
     const response = h.response({
@@ -77,8 +77,9 @@ const getAllBooksHandler = (req, h) => {
     const data = books.filter((book) => book.name.toLowerCase()
       .includes(name.toLowerCase())
       .map((b) => ({
-        bookId: b.id,
+        Id: b.id,
         name: b.name,
+        publisher: b.publisher,
       })));
     const response = h.response({
       status: 'success',
@@ -136,10 +137,10 @@ const getBookHandler = (req, h) => {
     const response = h.response({
       status: 'success',
       data: {
-        detail,
+        book: detail,
       },
     });
-    response.code(404);
+    response.code(200);
     return response;
   }
 
@@ -153,7 +154,7 @@ const getBookHandler = (req, h) => {
 
 const editBookByIdHandler = (req, h) => {
   const param = req.params;
-  const data = JSON.parse(req.payload);
+  const data = req.payload;
   const {
     name, year, author, summary, publisher, pageCount, readPage, reading,
   } = data;
@@ -181,7 +182,7 @@ const editBookByIdHandler = (req, h) => {
   if (index === -1) {
     const response = h.response({
       status: 'fail',
-      message: 'Gagal memperbarui Buku. Id tidak ditemukan',
+      message: 'Gagal memperbarui buku. Id tidak ditemukan',
     });
     response.code(404);
     return response;
