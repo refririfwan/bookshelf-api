@@ -31,8 +31,6 @@ const createBookHandler = (req, h) => {
   const insertedAt = new Date().toISOString();
   const updatedAt = insertedAt;
 
-  const isSuccess = books.filter((book) => book.id === id).length > 0;
-
   const newBook = {
     name,
     year,
@@ -49,6 +47,8 @@ const createBookHandler = (req, h) => {
   };
 
   books.push(newBook);
+
+  const isSuccess = books.filter((book) => book.id === id).length > 0;
 
   if (isSuccess) {
     const response = h.response({
@@ -77,7 +77,7 @@ const getAllBooksHandler = (req, h) => {
     const data = books.filter((book) => book.name.toLowerCase()
       .includes(name.toLowerCase())
       .map((b) => ({
-        Id: b.id,
+        id: b.id,
         name: b.name,
         publisher: b.publisher,
       })));
@@ -94,6 +94,7 @@ const getAllBooksHandler = (req, h) => {
       .map((b) => ({
         id: b.id,
         name: b.name,
+        publisher: b.publisher,
       }));
     const response = h.response({
       status: 'success',
@@ -108,6 +109,7 @@ const getAllBooksHandler = (req, h) => {
       .map((b) => ({
         id: b.id,
         name: b.name,
+        publisher: b.publisher,
       }));
     const response = h.response({
       status: 'success',
@@ -120,7 +122,9 @@ const getAllBooksHandler = (req, h) => {
   const response = h.response({
     status: 'success',
     data: {
-      books,
+      id: books.id,
+      name: books.name,
+      publisher: books.publisher,
     },
   });
   response.code(200);
