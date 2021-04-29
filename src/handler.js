@@ -119,12 +119,15 @@ const getAllBooksHandler = (req, h) => {
     return response;
   }
 
+  const data = [];
+  data.id = books.id;
+  data.name = books.name;
+  data.publisher = books.publisher;
+
   const response = h.response({
     status: 'success',
     data: {
-      id: books.id,
-      name: books.name,
-      publisher: books.publisher,
+      books: data,
     },
   });
   response.code(200);
