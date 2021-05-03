@@ -119,10 +119,11 @@ const getAllBooksHandler = (req, h) => {
     return response;
   }
 
-  const data = [];
-  data.id = books.id;
-  data.name = books.name;
-  data.publisher = books.publisher;
+  const data = books.map((book) => ({
+    id: book.id,
+    name: book.name,
+    publisher: book.publisher,
+  }));
 
   const response = h.response({
     status: 'success',
